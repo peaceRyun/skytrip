@@ -1,12 +1,17 @@
 import { WiHumidity, WiStrongWind, WiBarometer } from 'react-icons/wi';
 
-const details = [
-  { label: '습도', value: '66%', icon: <WiHumidity size={28} /> },
-  { label: '풍속', value: '2.5 m/s', icon: <WiStrongWind size={28} /> },
-  { label: '기압', value: '1012 hPa', icon: <WiBarometer size={28} /> },
-];
+export default function WeatherDetails({ current }) {
+  // 데이터를 category 기반으로 추출
+  const reh = current.find((d) => d.category === 'REH')?.fcstValue ?? '-';
+  const wsd = current.find((d) => d.category === 'WSD')?.fcstValue ?? '-';
+  const pres = current.find((d) => d.category === 'PTY')?.fcstValue ?? '-'; // 기압값은 API에 없을 수도 있어, 대체 필요
 
-export default function WeatherDetails() {
+  const details = [
+    { label: '습도', value: `${reh}%`, icon: <WiHumidity size={28} /> },
+    { label: '풍속', value: `${wsd} m/s`, icon: <WiStrongWind size={28} /> },
+    { label: '기압', value: `${pres} hPa`, icon: <WiBarometer size={28} /> }, // 실제로는 PTY 말고 기압 데이터 필요
+  ];
+
   return (
     <section>
       <h2 className='text-lg font-semibold mb-2'>상세 정보</h2>

@@ -1,23 +1,36 @@
-// components/DailyForecast.jsx
-import { WiDaySunny, WiCloudy, WiRain } from 'react-icons/wi';
+import { WiDaySunny, WiDayCloudy, WiCloudy, WiRain, WiThunderstorm, WiSnow } from 'react-icons/wi';
 
-const daily = [
-  { day: '목', icon: <WiDaySunny size={32} />, high: 29, low: 21 },
-  { day: '금', icon: <WiCloudy size={32} />, high: 27, low: 20 },
-  { day: '토', icon: <WiRain size={32} />, high: 24, low: 19 },
-  { day: '일', icon: <WiDaySunny size={32} />, high: 28, low: 20 },
-];
+const getIcon = (pty, sky) => {
+  if (pty === '1') return <WiRain size={32} />; // 비
+  if (pty === '2') return <WiRain size={32} />; // 비/눈
+  if (pty === '3') return <WiSnow size={32} />; // 눈
+  if (pty === '4') return <WiThunderstorm size={32} />; // 소나기
 
-export default function DailyForecast() {
+  // PTY가 0일 때는 하늘상태(SKY)로 판단
+  switch (sky) {
+    case '1':
+      return <WiDaySunny size={32} />; // 맑음
+    case '3':
+      return <WiDayCloudy size={32} />; // 구름 많음
+    case '4':
+      return <WiCloudy size={32} />; // 흐림
+    default:
+      return <WiDaySunny size={32} />;
+  }
+};
+
+export default function DailyForecast({ dailyData }) {
   return (
     <section>
-      <h2 className="text-lg font-semibold mb-2">주간 예보</h2>
-      <ul className="space-y-2">
-        {daily.map((d, i) => (
-          <li key={i} className="flex justify-between items-center bg-white/10 rounded-lg px-4 py-2">
-            <span className="w-8">{d.day}</span>
-            <span className="flex-1 flex justify-center">{d.icon}</span>
-            <span className="text-sm">{d.low}° / <b>{d.high}°</b></span>
+      <h2 className='text-lg font-semibold mb-2'>주간 예보</h2>
+      <ul className='space-y-2 bg-white/10 rounded-lg px-4 py-2'>
+        {dailyData.map((d, i) => (
+          <li key={i} className='flex justify-between items-center py-2 border-b border-gray-50/20'>
+            <span className='w-8'>{d.date}</span>
+            <span className='flex-1 flex justify-center'>{getIcon(d.pty, d.sky)}</span>
+            <span className='text-sm'>
+              {d.minTemp}° / <b>{d.maxTemp}°</b>
+            </span>
           </li>
         ))}
       </ul>
